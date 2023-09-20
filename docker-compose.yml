@@ -1,0 +1,11 @@
+version: '3'  # The version of the Docker Compose file format
+
+services:
+  nestjs-app:
+    build:
+      context: .  # Use the current directory as the build context
+      dockerfile: Dockerfile  # Use the Dockerfile in this directory
+    ports:
+      - "3000:3000"  # Map port 3000 from the host to port 3000 in the container
+    volumes:
+      - .:/app  # Mount the current directory as a volume in the container
