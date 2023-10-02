@@ -4,19 +4,18 @@ import {
   Param,
   Post,
   Body,
-  Put,
+  Patch,
   Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import * as uuid from 'uuid';
-import { IUser } from './interfaces/user';
-
+import { User } from './user.entity';
+import { UserDto } from './dto/user.dto';
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  getAll() {
+  getAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
@@ -26,12 +25,12 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() user: Omit<IUser, 'id'>): any {
-    return this.usersService.create({ ...user, id: uuid.v4() });
+  create(@Body() user: UserDto): Promise<User> {
+    return this.usersService.create(user);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() user: Omit<IUser, 'id'>) {
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() user: Partial<UserDto>) {
     return this.usersService.update(id, user);
   }
 

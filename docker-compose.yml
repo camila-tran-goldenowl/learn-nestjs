@@ -1,6 +1,17 @@
 version: '3'  # The version of the Docker Compose file format
 
 services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: 'nestjs-delta'
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ''
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+      
   nestjs-app:
     build:
       context: .  # Use the current directory as the build context

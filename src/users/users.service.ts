@@ -1,50 +1,47 @@
-import { IUser } from './interfaces/user';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from './user.entity';
+import { UserDto } from './dto/user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  private readonly usersList: Array<IUser> = [];
-  create(user: IUser) {
-    this.usersList.push(user);
-    return user;
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async create(user: UserDto): Promise<User> {
+    user.password = await bcrypt.hash(user.password, 10);
+    return await this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.usersList;
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
-  findOne(id: string) {
-    const user = this.usersList.find((item: IUser) => item.id === id);
+  async findOne(id: string): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
-      return {
-        message: 'Not found user',
-      };
+      throw new NotFoundException();
     }
     return user;
   }
 
-  update(id: string, user: Omit<IUser, 'id'>) {
-    const userIndex = this.usersList.findIndex((item: IUser) => item.id === id);
-    if (userIndex === -1) {
-      return {
-        message: 'Not found user',
-      };
+  async update(
+    id: string,
+    updateUser: Partial<UserDto>,
+  ): Promise<User | undefined> {
+    const existingUser = await this.userRepository.findOne({ where: { id } });
+    if (!existingUser) {
+      throw new NotFoundException();
     }
-    const newUserInfo = { ...this.usersList[userIndex], ...user };
-    this.usersList[userIndex] = newUserInfo;
-    return newUserInfo;
+    await this.userRepository.update(id, updateUser);
+    return this.userRepository.findOne({ where: { id } });
   }
 
-  remove(id: string) {
-    const userIndex = this.usersList.findIndex((item: IUser) => item.id === id);
-    if (userIndex === -1) {
-      return {
-        message: 'Not found user',
-      };
-    }
-    this.usersList.splice(userIndex);
-    return {
-      message: 'Delete successfully',
-    };
+  async remove(id: string): Promise<void> {
+    await this.userRepository.delete(id);
   }
 }
