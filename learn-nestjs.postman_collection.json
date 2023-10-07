@@ -64,32 +64,6 @@
 					"response": []
 				},
 				{
-					"name": "create new user",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\":\"Camila\",\n    \"last_name\":\"Tran\",\n    \"email\":\"ngocchautrantp@gmail.com\",\n    \"password\":\"123\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{API_HOST}}/users",
-							"host": [
-								"{{API_HOST}}"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "Update user",
 					"request": {
 						"method": "PATCH",
@@ -111,6 +85,65 @@
 							"path": [
 								"users",
 								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"_\",\n    \"last_name\":\"_\",\n    \"email\":\"admin1@gmail.com\",\n    \"password\":\"123\",\n    \"role\": \"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_HOST}}/auth/register",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin1@gmail.com\",\n    \"password\":\"123\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_HOST}}/auth/login",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"auth",
+								"login"
 							]
 						}
 					},

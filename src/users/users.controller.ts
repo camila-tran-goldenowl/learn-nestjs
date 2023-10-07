@@ -6,11 +6,15 @@ import {
   Body,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { UserDto } from './dto/user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth';
+
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

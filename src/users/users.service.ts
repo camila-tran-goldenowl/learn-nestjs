@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import { User } from './user.entity';
+import { Repository } from 'typeorm';
+import { UserDto } from './dto/user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UsersService {
@@ -43,5 +43,9 @@ export class UsersService {
 
   async remove(id: string): Promise<void> {
     await this.userRepository.delete(id);
+  }
+
+  async findByEmail(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { email } });
   }
 }
